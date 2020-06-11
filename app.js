@@ -6,8 +6,6 @@ let current = 0;
 
 let activePlayer = 0;
 
-let dice = 0;
-
 document.querySelector('.dice').style.display = 'none';
 document.querySelector('.btn-roll').disabled = true;
 
@@ -23,13 +21,12 @@ document.querySelector('.btn-new').addEventListener('click', () => {
   document.querySelector('#current-0').textContent = 0;
   document.querySelector('#current-1').textContent = 0;
   document.querySelector('.dice').style.display = 'inline';
-  dice = 1;
   document.querySelector('.dice').src = 'dice-1.png';
 });
 
 document.querySelector('.btn-roll').addEventListener('click', () => {
   document.querySelector('.dice').style.display = 'inline';
-  dice = Math.floor(Math.random() * 6) + 1;
+  const dice = Math.floor(Math.random() * 6) + 1;
   if (dice === 1) {
     document.querySelector('img.dice').src = 'dice-1.png';
   } else if (dice === 2) {
