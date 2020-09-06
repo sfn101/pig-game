@@ -1,3 +1,4 @@
+/* eslint-disable strict */
 /*
 GAME RULES:
 
@@ -8,3 +9,14 @@ GAME RULES:
 - The first player to reach 100 points on GLOBAL score wins the game
 
 */
+let score, roundScore, activePlayer;
+
+score = [0, 0];
+roundScore = [0, 0];
+activePlayer = 0;
+
+document.querySelector('#score-0').textContent = score[0];
+
+document.querySelector('#score-1').textContent = score[1];
+
+document.querySelector('.dice').
