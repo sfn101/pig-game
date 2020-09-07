@@ -19,4 +19,4 @@ document.querySelector('#score-0').textContent = score[0];
 
 document.querySelector('#score-1').textContent = score[1];
 
-document.querySelector('.dice').
+document.querySelector('.dice').style.display = 'none';
