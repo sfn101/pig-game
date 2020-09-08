@@ -18,12 +18,23 @@ activePlayer = 0;
 function newG() {
   score = [0, 0];
   roundScore = [0, 0];
+  document
+    .querySelector(`.player-${activePlayer}-panel`)
+    .classList.remove('winner');
+  document
+    .querySelector(`.player-${activePlayer}-panel`)
+    .classList.toggle('active');
   activePlayer = 0;
+  document
+    .querySelector(`.player-${activePlayer}-panel`)
+    .classList.toggle('active');
   document.querySelector('#score-0').textContent = score[0];
   document.querySelector('#score-1').textContent = score[1];
   document.querySelector('.dice').style.display = 'none';
   document.querySelector('#current-0').textContent = roundScore[0];
   document.querySelector('#current-1').textContent = roundScore[1];
+  document.querySelector('.btn-roll').disabled = false;
+  document.querySelector('.btn-hold').disabled = false;
 }
 newG();
 function rScoreUP() {
@@ -51,7 +62,13 @@ document.querySelector('.btn-roll').addEventListener('click', () => {
     rScoreUP();
     diceDOM.style.display = 'inline';
     diceDOM.src = `dice-${dice}.png`;
+    document
+      .querySelector(`.player-${activePlayer}-panel`)
+      .classList.toggle('active');
     activePlayer = activePlayer > 0 ? 0 : 1;
+    document
+      .querySelector(`.player-${activePlayer}-panel`)
+      .classList.toggle('active');
   }
 });
 
@@ -60,5 +77,19 @@ document.querySelector('.btn-hold').addEventListener('click', () => {
   scoreUP();
   roundScore[activePlayer] = 0;
   rScoreUP();
-  activePlayer = activePlayer > 0 ? 0 : 1;
+  if (score[activePlayer] >= 100) {
+    document
+      .querySelector(`.player-${activePlayer}-panel`)
+      .classList.add('winner');
+    document.querySelector('.btn-roll').disabled = true;
+    document.querySelector('.btn-hold').disabled = true;
+  } else {
+    document
+      .querySelector(`.player-${activePlayer}-panel`)
+      .classList.toggle('active');
+    activePlayer = activePlayer > 0 ? 0 : 1;
+    document
+      .querySelector(`.player-${activePlayer}-panel`)
+      .classList.toggle('active');
+  }
 });
