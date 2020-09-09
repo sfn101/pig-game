@@ -9,12 +9,18 @@ GAME RULES:
 - The first player to reach 100 points on GLOBAL score wins the game
 
 */
-let score, roundScore, activePlayer, dicePast;
+let score, roundScore, activePlayer, dicePast, winScore;
+document.querySelector('#btn-ok').addEventListener('click', () => {
+  winScore = document.getElementById('scoreValue').value;
+  document.getElementById('btn-ok').disabled = true;
+  document.getElementById('scoreValue').disabled = true;
+});
 
 function newG() {
   score = [0, 0];
   roundScore = 0;
   activePlayer = 0;
+  winScore = 100;
   document
     .querySelector(`.player-${activePlayer}-panel`)
     .classList.remove('winner');
@@ -27,10 +33,16 @@ function newG() {
   document.querySelector('#score-0').textContent = score[0];
   document.querySelector('#score-1').textContent = score[1];
   document.querySelector('.dice').style.display = 'none';
+  document.querySelector('#dice-2').style.display = 'none';
   document.querySelector('#current-0').textContent = roundScore;
   document.querySelector('#current-1').textContent = roundScore;
   document.querySelector('.btn-roll').disabled = false;
   document.querySelector('.btn-hold').disabled = false;
+  document.getElementById('btn-ok').disabled = false;
+  document.getElementById('scoreValue').disabled = false;
+  document.getElementById('2-dices').checked = false;
+  document.getElementById('2-six').checked = false;
+
 }
 newG();
 function rScoreUP() {
@@ -43,6 +55,7 @@ function scoreUP() {
 }
 
 const diceDOM = document.querySelector('.dice');
+const diceDOM2 = document.querySelector('#dice-2');
 function nextP() {
   roundScore = 0;
   rScoreUP();
@@ -61,7 +74,15 @@ document.querySelector('.btn-new').addEventListener('click', newG);
 
 document.querySelector('.btn-roll').addEventListener('click', () => {
   diceDOM.style.display = 'inline';
+  towDice = document.getElementById('2-dices').checked;
+  towsix = document.getElementById('2-six').checked;
   const dice = Math.floor(Math.random() * 6) + 1;
+  if (towDice === true) {
+    const dice2 = Math.floor(Math.random() * 6) + 1;
+    diceDOM2.src = `dice-${dice2}.png`;
+    diceDOM2.style.display = 'inline';
+
+  }
   diceDOM.src = `dice-${dice}.png`;
   if (dice > 1) {
     roundScore += dice;
@@ -82,7 +103,7 @@ document.querySelector('.btn-hold').addEventListener('click', () => {
   score[activePlayer] += roundScore;
   roundScore = 0;
   scoreUP();
-  if (score[activePlayer] >= 100) {
+  if (score[activePlayer] >= winScore) {
     document
       .querySelector(`.player-${activePlayer}-panel`)
       .classList.add('winner');
