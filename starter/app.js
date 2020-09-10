@@ -9,27 +9,30 @@ GAME RULES:
 - The first player to reach 100 points on GLOBAL score wins the game
 
 */
-let score, roundScore, activePlayer, dicePast, winScore;
+let score, roundScore, activePlayer, dicePast, dicePast2, winScore;
 document.querySelector('#btn-ok').addEventListener('click', () => {
   winScore = document.getElementById('scoreValue').value;
   document.getElementById('btn-ok').disabled = true;
   document.getElementById('scoreValue').disabled = true;
 });
+activePlayer = 0;
 
 function newG() {
-  score = [0, 0];
-  roundScore = 0;
-  activePlayer = 0;
-  winScore = 100;
   document
     .querySelector(`.player-${activePlayer}-panel`)
     .classList.remove('winner');
+  score = [0, 0];
+  roundScore = 0;
+  winScore = 100;
+  dicePast = 0;
+  dicePast2 = 0;
   document
     .querySelector(`.player-${activePlayer}-panel`)
-    .classList.toggle('active');
+    .classList.remove('active');
+  activePlayer = 0;
   document
     .querySelector(`.player-${activePlayer}-panel`)
-    .classList.toggle('active');
+    .classList.add('active');
   document.querySelector('#score-0').textContent = score[0];
   document.querySelector('#score-1').textContent = score[1];
   document.querySelector('.dice').style.display = 'none';
@@ -42,7 +45,8 @@ function newG() {
   document.getElementById('scoreValue').disabled = false;
   document.getElementById('2-dices').checked = false;
   document.getElementById('2-six').checked = false;
-
+  document.getElementById('2-dices').disabled = false;
+  document.getElementById('2-six').disabled = false;
 }
 newG();
 function rScoreUP() {
@@ -59,43 +63,54 @@ const diceDOM2 = document.querySelector('#dice-2');
 function nextP() {
   roundScore = 0;
   rScoreUP();
-  console.log(roundScore);
+  dicePast = 0;
+  dicePast2 = 0;
   document
     .querySelector(`.player-${activePlayer}-panel`)
-    .classList.toggle('active');
+    .classList.remove('active');
   activePlayer = activePlayer > 0 ? 0 : 1;
   document
     .querySelector(`.player-${activePlayer}-panel`)
-    .classList.toggle('active');
-  dicePast = 0;
+    .classList.add('active');
 }
 
 document.querySelector('.btn-new').addEventListener('click', newG);
 
 document.querySelector('.btn-roll').addEventListener('click', () => {
   diceDOM.style.display = 'inline';
-  towDice = document.getElementById('2-dices').checked;
-  towsix = document.getElementById('2-six').checked;
+  const towDice = document.getElementById('2-dices').checked;
+  const towSix = document.getElementById('2-six').checked;
+  document.getElementById('btn-ok').disabled = true;
+  document.getElementById('scoreValue').disabled = true;
+  document.getElementById('2-dices').disabled = true;
+  document.getElementById('2-six').disabled = true;
   const dice = Math.floor(Math.random() * 6) + 1;
-  if (towDice === true) {
-    const dice2 = Math.floor(Math.random() * 6) + 1;
-    diceDOM2.src = `dice-${dice2}.png`;
-    diceDOM2.style.display = 'inline';
-
-  }
+  const dice2 = Math.floor(Math.random() * 6) + 1;
   diceDOM.src = `dice-${dice}.png`;
-  if (dice > 1) {
+  if (dice > 1 || (towDice === true && dice > 1 && dice2 > 1)) {
+    if (towDice === true) {
+      roundScore += dice2;
+      diceDOM2.src = `dice-${dice2}.png`;
+      diceDOM2.style.display = 'inline';
+      diceDOM.setAttribute('id', 'dice-1');
+    } else {
+      diceDOM.removeAttribute('id');
+    }
     roundScore += dice;
     rScoreUP();
+    if (
+      (towSix === true && dice === 6 && dicePast === 6) ||
+      (towDice === true && towSix === true && dice2 === 6 && dicePast2 === 6)
+    ) {
+      score[activePlayer] = 0;
+      scoreUP();
+      nextP();
+    } else {
+      dicePast = dice;
+      dicePast2 = dice2;
+    }
   } else {
     nextP();
-  }
-  if (dice === 6 && dicePast === 6) {
-    score[activePlayer] = 0;
-    scoreUP();
-    nextP();
-  } else {
-    dicePast = dice;
   }
 });
 
